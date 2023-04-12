@@ -68,7 +68,7 @@ class GroupTest extends GroovyTestCase{
     def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
     schema.getElement('employee').create(creator, new RequestTemplateCreatorContext())
     def emp = new XmlSlurper().parseText(strWriter.toString())
-    assertEquals('?XXX?', emp.person.firstName.toString())
-    assertEquals('?XXX?', emp.person.lastName.toString())
+    assertEquals('string', emp.person.firstName.toString())
+    assertEquals('string', emp.person.lastName.toString())
   }
 }

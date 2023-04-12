@@ -14,7 +14,6 @@ package com.predic8.wstool.creator
 import groovy.test.GroovyTestCase;
 import groovy.xml.*
 import groovy.namespace.*
-import com.predic8.creator.*
 import com.predic8.schema.Element
 import com.predic8.wsdl.*
 import com.predic8.xml.util.*
@@ -35,7 +34,7 @@ class ImportedWSDLRequestTemplateCreatorTest extends GroovyTestCase {
 	void testElementRequestTemplate() {
 		Element element = definitions.getInputElementForOperation(portType.localPart, operationName)
 		def requestTemplate = new XmlSlurper().parseText(element.requestTemplate)
-		assert requestTemplate.text() == '?999?' 
+		assert requestTemplate.text() == 'number'
 	}
 	
 }

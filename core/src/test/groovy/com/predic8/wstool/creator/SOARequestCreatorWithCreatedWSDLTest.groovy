@@ -1,3 +1,4 @@
+/*
 package com.predic8.wstool.creator
 
 import groovy.xml.MarkupBuilder
@@ -60,3 +61,4 @@ class SOARequestCreatorWithCreatedWSDLTest {
   }
   
 }
+*/

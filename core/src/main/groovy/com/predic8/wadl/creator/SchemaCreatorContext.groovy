@@ -19,12 +19,13 @@ import com.predic8.schema.creator.SchemaCreatorContext;
 
 class JsonCreatorContext extends SchemaCreatorContext implements Cloneable {
 
-	Element element
-	
-	def jsonElements = [:]
-	
-  public Object clone() {
-    new JsonCreatorContext(element: element, jsonElements: jsonElements)
-  }
+    Element element
+    List<String> arrayNodes = new ArrayList<>();
+
+    def jsonElements = [:]
+
+    public Object clone() {
+        new JsonCreatorContext(element: element, jsonElements: jsonElements, arrayNodes: arrayNodes)
+    }
 }
 

@@ -15,9 +15,9 @@ class JsonCreatorTest extends GroovyTestCase {
 		SchemaParser parser = new SchemaParser(resourceResolver: new ClasspathResolver())
 		schema = parser.parse('group.xsd')
 	}
-	
+
 	void testJsonCreator() {
 		def element = schema.getElement('employee')
-		assert '{"employee":{"person":{"firstName":"?XXX?","lastName":"?XXX?"}}}' == element.asJson.replaceAll("\\s","")
+		assert '{"employee":{"person":{"firstName":"string","lastName":"string"}}}' == element.asJson.replaceAll("\\s","")
 	}
 }

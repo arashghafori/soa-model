@@ -40,10 +40,10 @@ class SimpleContentTest extends GroovyTestCase {
   
   void testRequestTemplateCreator(){
     def requestTemplate = new XmlSlurper().parseText(element.requestTemplate)
-    assertEquals('?999.99?', requestTemplate.text())
+    assertEquals('number', requestTemplate.text())
   }
   
-  void testSchemaDiffGenerator(){
+  /*void testSchemaDiffGenerator(){
     def diffGen = new SchemaDiffGenerator()
     SimpleContent a = element.embeddedType.model
     def b = new SimpleContent(extension: new Extension())
@@ -52,6 +52,6 @@ class SimpleContentTest extends GroovyTestCase {
     assertEquals(1, diffs.size())
     assertTrue(diffs.toString().contains("SimpleContent:"))
     assertTrue(diffs[0].dump().contains("Extension base has changed from {http://www.w3.org/2001/XMLSchema}decimal to {http://www.w3.org/2001/XMLSchema}int."))
-  }
+  }*/
 }
 

@@ -31,10 +31,10 @@ class SOARequestCreatorSOAP11Test extends GroovyTestCase{
     creator.createRequest('LibraryService', 'addBook', 'LibraryServicePortBinding')
     request = createRequest(sw)
     assertEquals(Consts.SOAP11_NS, request.Envelope.lookupNamespace('s11'))
-    assertEquals('?XXX?', request.Header.username.text())
-    assertEquals('?999?', request.Header.timeout.text())
-    assertEquals('?XXX?', request.Body.addBook.title.text())
-    assertEquals('?XXX?', request.Body.addBook.author.text())
+    assertEquals('string', request.Header.username.text())
+    assertEquals('number', request.Header.timeout.text())
+    assertEquals('string', request.Body.addBook.title.text())
+    assertEquals('string', request.Body.addBook.author.text())
   }
 
   void testRequestCreatorWithDocLit(){
@@ -61,10 +61,10 @@ class SOARequestCreatorSOAP11Test extends GroovyTestCase{
     creator.createRequest('RPCLiteralSamplePT', 'addPerson', 'RPCLiteralSampleBinding')
     request = createRequest(sw)
     assertEquals(Consts.SOAP11_NS, request.Envelope.lookupNamespace('s11'))
-    assertEquals('?XXX?', request.Body.addPerson.name.text())
-    assertEquals('?XXX?', request.Body.addPerson.lastname.text())
-    assertEquals('?XXX?', request.Body.addPerson.email.text())
-    assertEquals('?999?', request.Body.addPerson.age.text())
+    assertEquals('string', request.Body.addPerson.name.text())
+    assertEquals('string', request.Body.addPerson.lastname.text())
+    assertEquals('string', request.Body.addPerson.email.text())
+    assertEquals('number', request.Body.addPerson.age.text())
   }
 
   void testRequestCreatorWithRPCLit(){

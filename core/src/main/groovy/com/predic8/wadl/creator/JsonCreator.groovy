@@ -13,8 +13,6 @@ package com.predic8.wadl.creator;
 
 import groovy.json.JsonBuilder
 
-import static com.predic8.soamodel.Consts.SCHEMA_NS
-
 import com.predic8.schema.*
 import com.predic8.schema.creator.*
 import com.predic8.wstool.creator.TemplateUtil
@@ -22,18 +20,20 @@ import com.predic8.wstool.creator.TemplateUtil
 class JsonCreator extends AbstractSchemaCreator <JsonCreatorContext>{
 
 	JsonBuilder builder
-	
+
 	String getElementAsJson(Element element, JsonCreatorContext ctx = new JsonCreatorContext()) {
 		createElement(element, ctx)
-		def map = ["${element.name}":ctx.jsonElements["${element.name}"]]
-		builder = new JsonBuilder()
-		builder map
-		builder.toPrettyString()
+		LinkedHashMap<GString, Object> map = ["${element.name}":ctx.jsonElements["${element.name}"]]
+		org.json.JSONObject result = new org.json.JSONObject(map)
+		for (String node : ctx.arrayNodes) {
+			JsonUtil.getInstance().replaceObjectWithArray(result, node, false)
+		}
+		result.toString()
 	}
 
-	public void createElement(Element element, JsonCreatorContext ctx) {
+	void createElement(Element element, JsonCreatorContext ctx) {
 		if(element.ref) {
-		element.schema.getElement(element.ref).create(this, ctx)
+			element.schema.getElement(element.ref).create(this, ctx)
 			return
 		}
 		def type
@@ -43,13 +43,23 @@ class JsonCreator extends AbstractSchemaCreator <JsonCreatorContext>{
 			type = element.schema.getType(element.type) ?: element.embeddedType
 		}
 		if(type instanceof BuiltInSchemaType){
-			ctx.jsonElements[element.name] = TemplateUtil.getTemplateValue(type)
+			if (element.maxOccurs == "unbounded")
+				ctx.jsonElements[element.name] = Collections.singletonList(TemplateUtil.getTemplateValue(type))
+			else
+				ctx.jsonElements[element.name] = TemplateUtil.getTemplateValue(type)
+
 			return
+		}
+		if (element.maxOccurs == "unbounded"){
+			if (!ctx.arrayNodes.contains(element.name))
+				ctx.arrayNodes.add(element.name)
+			else
+				return
 		}
 		ctx.element = element
 		type.create(this, ctx)
 	}
-	
+
 	void createSequence(Sequence sequence, JsonCreatorContext ctx){
 		sequence.particles.each {
 			if(it instanceof Element){

@@ -32,7 +32,7 @@ class SOARequestCreatorSOAP12Test extends GroovyTestCase{
     creator.createRequest('BLZServicePortType', 'getBank', 'BLZServiceSOAP12Binding')
     request = new XmlSlurper().parseText(strWriter.toString())
     assertEquals(Consts.SOAP12_NS, request.Envelope.lookupNamespace('s12'))
-    assertEquals('?XXX?', request.Body.getBank.blz.text())
+    assertEquals('string', request.Body.getBank.blz.text())
   }
 
   void testRequestCreatorWithDocLit(){

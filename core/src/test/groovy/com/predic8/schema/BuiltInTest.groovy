@@ -36,7 +36,7 @@ class BuiltInTest extends GroovyTestCase{
     schema.getElement('Country').create(creator, new RequestTemplateCreatorContext())
     def Country = new XmlSlurper().parseText(strWriter.toString())
     assertEquals('Country' , Country.name())
-    assertEquals('?XXX?' , Country.text())
+    assertEquals('string' , Country.text())
   }
   
   void testCreateXmlInteger() {
@@ -45,7 +45,7 @@ class BuiltInTest extends GroovyTestCase{
     schema.getElement('Population').create(creator, new RequestTemplateCreatorContext())
     def Population = new XmlSlurper().parseText(strWriter.toString())
     assertEquals('Population' , Population.name())
-    assertEquals('?999?' , Population.text())
+    assertEquals('number' , Population.text())
   }
   
   void testCreateXmlShort() {
@@ -54,7 +54,7 @@ class BuiltInTest extends GroovyTestCase{
     schema.getElement('States').create(creator, new RequestTemplateCreatorContext())
     def States = new XmlSlurper().parseText(strWriter.toString())
     assertEquals('States' , States.name())
-    assertEquals('?999?' , States.text())
+    assertEquals('number' , States.text())
   }
   
   void testCreateXmlDouble() {
@@ -63,7 +63,7 @@ class BuiltInTest extends GroovyTestCase{
     schema.getElement('Area').create(creator, new RequestTemplateCreatorContext())
     def Area = new XmlSlurper().parseText(strWriter.toString())
     assertEquals('Area' , Area.name())
-    assertEquals('?999.99?' , Area.text())
+    assertEquals('number' , Area.text())
   }
   
   void testCreateXmlFloat() {
@@ -72,7 +72,7 @@ class BuiltInTest extends GroovyTestCase{
     schema.getElement('Border').create(creator, new RequestTemplateCreatorContext())
     def Border = new XmlSlurper().parseText(strWriter.toString())
     assertEquals('Border' , Border.name())
-    assertEquals('?999.99?' , Border.text())
+    assertEquals('number' , Border.text())
   }
   
   void testCreateXmlBoolean() {
@@ -81,6 +81,6 @@ class BuiltInTest extends GroovyTestCase{
     schema.getElement('NatoMember').create(creator, new RequestTemplateCreatorContext())
     def NatoMember = new XmlSlurper().parseText(strWriter.toString())
     assertEquals('NatoMember' , NatoMember.name())
-    assertEquals('?true?' , NatoMember.text())
+    assertEquals('boolean' , NatoMember.text())
   }
 }

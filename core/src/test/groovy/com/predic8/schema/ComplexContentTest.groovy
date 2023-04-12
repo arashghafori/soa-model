@@ -86,10 +86,10 @@ class ComplexContentTest extends GroovyTestCase{
     def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
     schemaA.getElement('employee').create(creator, new RequestTemplateCreatorContext())
     def emp = new XmlSlurper().parseText(strWriter.toString())
-    assertEquals('?XXX?', emp.firstName.toString())
-    assertEquals('?XXX?', emp.lastName.toString())
-    assertEquals('?XXX?', emp.department.name.toString())
-    assertEquals('?999?', emp.department.id.toString())
+    assertEquals('string', emp.firstName.toString())
+    assertEquals('string', emp.lastName.toString())
+    assertEquals('string', emp.department.name.toString())
+    assertEquals('number', emp.department.id.toString())
   }
 
   void testSchemaDiffGenerator(){

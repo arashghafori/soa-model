@@ -57,14 +57,14 @@ class AttributeGroupTest extends GroovyTestCase{
     def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
     schema.getElement('chef').create(creator, new RequestTemplateCreatorContext())
     def request = new XmlSlurper().parseText(strWriter.toString()).declareNamespace(ns1:'http://predic8.com/human-resources/')
-    assertEquals('?XXX?', request.'@ns1:Attr1'.toString())
-    assertEquals('?999?', request.'@ns1:Attr4'.toString())
-    assertEquals('?XXX?', request.'@ns1:Attr5'.toString())
-    assertEquals('?999?', request.'@ns1:Attr6'.toString())
-    assertEquals('?999?', request.'@ns1:Attr7'.toString())
-    assertEquals('?XXX?', request.person.lastName.toString())
-    assertEquals('?XXX?', request.person.'@ns1:Attr3'.toString())
-    assertEquals('?999?', request.person.'@ns1:Attr4'.toString())
+    assertEquals('string', request.'@ns1:Attr1'.toString())
+    assertEquals('number', request.'@ns1:Attr4'.toString())
+    assertEquals('string', request.'@ns1:Attr5'.toString())
+    assertEquals('number', request.'@ns1:Attr6'.toString())
+    assertEquals('number', request.'@ns1:Attr7'.toString())
+    assertEquals('string', request.person.lastName.toString())
+    assertEquals('string', request.person.'@ns1:Attr3'.toString())
+    assertEquals('number', request.person.'@ns1:Attr4'.toString())
 //    println strWriter
   }
   

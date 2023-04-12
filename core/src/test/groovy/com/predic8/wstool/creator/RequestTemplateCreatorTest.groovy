@@ -20,7 +20,6 @@ import groovy.namespace.*
 
 import com.predic8.wsdl.*
 import com.predic8.xml.util.*
-import com.predic8.creator.*
 
 class RequestTemplateCreatorTest extends GroovyTestCase {
 
@@ -35,8 +34,8 @@ class RequestTemplateCreatorTest extends GroovyTestCase {
   void testElementRequestTemplate() {
 		def element = definitions.getInputElementForOperation(portType, operationName)
     def requestTemplate = new XmlSlurper().parseText(element.requestTemplate).declareNamespace('ns1':'http://thomas-bayer.com/blz/')
-    assertEquals('?XXX?', requestTemplate.blz.text())
-    assertEquals('?999?', requestTemplate.'@ns1:testAttribute'.toString())
+    assertEquals('string', requestTemplate.blz.text())
+    assertEquals('number', requestTemplate.'@ns1:testAttribute'.toString())
   }
 	
 	void testRequestTemplateForElementWithDefaultAndFixet() {

@@ -28,6 +28,11 @@
 			<artifactId>groovy-xml</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20180813</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.groovy</groupId>
 			<artifactId>groovy-json</artifactId>
 		</dependency>
@@ -40,6 +45,11 @@
 					<artifactId>commons-logging</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.groovy</groupId>
@@ -157,7 +167,7 @@
 							<rules>
 								<bannedDependencies>
 									<excludes>
-										<exclude>commons-logging</exclude>
+<!--										<exclude>commons-logging</exclude>-->
 										<exclude>org.apache.logging.log4j</exclude>
 										<exclude>log4j</exclude>
 									</excludes>

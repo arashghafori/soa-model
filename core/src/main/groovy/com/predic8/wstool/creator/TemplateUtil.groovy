@@ -31,17 +31,17 @@ class TemplateUtil {
 	}
 	
   public static getTemplateValue(String type){
-    switch (type) {
-        case 'string' : return '?XXX?'
-        case ['int','integer', 'long' , 'short','nonNegativeInteger','positiveInteger'] : return '?999?'
-        case 'nonPositiveInteger' : return '?-999?'
-        case ['double','float','decimal'] : return '?999.99?'
-        case 'boolean' : return '?true?'
-        case 'date' : return '2008-12-31'
-        case 'dateTime' : return '2008-12-31T23:59:00.000-05:00'
-        default :
-          //"Type: ${type} is not supported yet"
-          return '???'
-     }
+      switch (type) {
+          case 'string' : return 'string'
+          case ['int','integer', 'long' , 'short','nonNegativeInteger','positiveInteger'] : return 'number'
+          case 'nonPositiveInteger' : return 'number'
+          case ['double','float','decimal'] : return 'number'
+          case 'boolean' : return 'boolean'
+          case 'date' : return '2008-12-31'
+          case 'dateTime' : return '2008-12-31T23:59:00.000-05:00'
+          default :
+              //"Type: ${type} is not supported yet"
+              return '???'
+      }
   }
 }

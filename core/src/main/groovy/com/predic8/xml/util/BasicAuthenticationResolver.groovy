@@ -14,62 +14,60 @@
 
 package com.predic8.xml.util
 
-import org.apache.commons.httpclient.params.*
-import org.apache.commons.httpclient.methods.*
-import org.apache.commons.httpclient.*
-import org.apache.commons.httpclient.auth.*
+import org.apache.http.HttpHost
+import org.apache.http.HttpResponse
+import org.apache.http.auth.AuthScope
+import org.apache.http.auth.Credentials
+import org.apache.http.auth.UsernamePasswordCredentials
+import org.apache.http.client.CredentialsProvider
+import org.apache.http.client.HttpClient
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.conn.params.ConnRoutePNames
+import org.apache.http.impl.client.BasicCredentialsProvider
+import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.predic8.schema.Import as SchemaImport
 import com.predic8.wsdl.Import as WsdlImport
-import com.predic8.io.*
-
 class BasicAuthenticationResolver extends ResourceResolver {
-  
+
   private static final Logger log = LoggerFactory.getLogger(BasicAuthenticationResolver.class)
-  
-  def baseDir = ''
+
   def username = ''
   def password = ''
   def proxyHost
   def proxyPort
-  
-  def resolve(input) {
+
+  def resolve(input, baseDir) {
     if ( input instanceof SchemaImport ) {
-      if ( !input.schemaLocation ) return 
+      if ( !input.schemaLocation ) return
       input = input.schemaLocation
     }
-		
+
     if ( input instanceof WsdlImport ) {
-    	if ( !input.location ) return 
-    			input = input.location
+      if ( !input.location ) return
+      input = input.location
     }
 
-		if ( input instanceof InputStream )  {
-      log.debug("resolving from reader, baseDir: $baseDir")
+    if ( input instanceof InputStream )  {
       return input;
-		}
-		
-		if(input instanceof Reader) {
-			throw new RuntimeException("Please use an InputStream instead of Reader!")
-		}
-    
-    log.debug("resolving: $input, baseDir: $baseDir")
-    
+    }
+
+    if(input instanceof Reader) {
+      throw new RuntimeException("Please use an InputStream instead of Reader!")
+    }
+
+
     if(input instanceof File){
       return new FileInputStream(input)
-    } 
-    if (! input instanceof String) 
+    }
+    if (! input instanceof String)
       throw new RuntimeException("Do not know how to resolve $input")
-    
+
     if(input.startsWith('file')){
-    	def url = new URL(input)
+      def url = new URL(input)
       return new FileInputStream(url.getPath())
     } else if(input.startsWith('http') || input.startsWith('https')) {
       return resolveViaHttp(input)
@@ -85,43 +83,44 @@ class BasicAuthenticationResolver extends ResourceResolver {
       }
     }
   }
-	
+
   private request(url) {
-    HttpClient client = new DefaultHttpClient();
+    CredentialsProvider provider = new BasicCredentialsProvider();
     if ( username ) {
-      client.params.authenticationPreemptive=true
-      Credentials defaultcreds = new UsernamePasswordCredentials(username, password)
-      client.state.setCredentials(AuthScope.ANY, defaultcreds)
+      Credentials credentials = new UsernamePasswordCredentials(username, password)
+      provider.setCredentials(AuthScope.ANY, credentials);
     }
-    if ( proxyHost )
-      client.getHostConfiguration().setProxy(proxyHost, proxyPort)
-    
-    HttpGet method = new HttpGet(url);
-    method.params.setParameter(HttpMethodParams.USER_AGENT,"SOA Model (see http://membrane-soa.org)")
-    int status = client.executeMethod(method);
+    HttpClient client = HttpClientBuilder.create()
+            .setDefaultCredentialsProvider(provider)
+            .build();
+    if ( proxyHost ){
+      HttpHost proxy = new HttpHost(proxyHost, proxyPort);
+      client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+    }
+
+    HttpResponse response = client.execute(new HttpGet(url));
+//    client.getParams().setParameter(HttpMethodParams.USER_AGENT,"SOA Model (see http://membrane-soa.org)")
+    int status = response.getStatusLine()
+            .getStatusCode();
     if(status != 200) {
       def rde = new ResourceDownloadException("could not get resource $url by HTTP")
       rde.status = status
       rde.url = url
-      method.releaseConnection()
+      response.close()
       throw rde
     }
-    method
+    response
   }
-  
+
   protected resolveViaHttp(url) {
-    /*def con = request(url)
-    def res = con.getResponseBodyAsStream()
-    //con.releaseConnection()
-    res*/
-    new StringReader(resolveAsString(url))
+    URI uri = new URI(url)
+    uri = uri.normalize()
+    new StringReader(resolveAsString(uri.toString()))
   }
-  
-  public resolveAsString(url) {
-    def con = request(url)
-    def res = con.getResponseBodyAsString()
-    con.releaseConnection()
-    res    
+
+  protected resolveAsString(url) {
+    HttpResponse con = request(url)
+    EntityUtils.toString(con.entity)
   }
-  
+
 }
